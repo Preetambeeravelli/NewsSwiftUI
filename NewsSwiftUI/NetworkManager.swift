@@ -11,6 +11,7 @@ import Foundation
 class NetworkManager: ObservableObject{
     
     @Published var posts = [Post]()
+    @Published var pageNumber = 0
     
     func fetchData(pageNumber: Int){
         guard pageNumber < 30 else {return}
@@ -19,7 +20,9 @@ class NetworkManager: ObservableObject{
             guard let data = data else {return}
             do{
                 let decodedData = try JSONDecoder().decode(Result.self, from: data)
-                self.posts = decodedData.hits
+                DispatchQueue.main.async {
+                    self.posts = decodedData.hits
+                }
             }
             catch{
                 print("Error Decoding data")
